@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Pixie Sparkles</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: block;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="pixieCanvas"></canvas>
+    <script>
+      const canvas = document.getElementById('pixieCanvas');
+      const ctx = canvas.getContext('2d');
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createStars();
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      let stars = [];
+      const starCount = 180;
+
+      function createStars() {
+        stars = [];
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 0.6 + 0.4,
+            phase: Math.random() * Math.PI * 2,
+            twinkleSpeed: Math.random() * 0.02 + 0.005,
+            baseAlpha: Math.random() * 0.3 + 0.4
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const s of stars) {
+          s.phase += s.twinkleSpeed;
+          const alpha = s.baseAlpha + 0.3 * Math.sin(s.phase);
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+
+      createStars();
+      draw();
+    </script>
+  </body>
+</html>
